@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -14,11 +14,8 @@ const EditStudent = () => {
 	});
 	const { firstName, lastName, email, gender } = student;
 
-	useEffect(() => {
-		loadStudent();
-	}, []);
-
-	const loadStudent = async () => {
+	// Wrapping loadStudent in useCallback to stabilize it as a dependency
+	const loadStudent = useCallback(async () => {
 		try {
 			const result = await axios.get(
 				`${process.env.REACT_APP_BACKEND_URL}/students/student/${id}`
@@ -27,7 +24,12 @@ const EditStudent = () => {
 		} catch (error) {
 			console.error("Error loading student data:", error);
 		}
-	};
+	}, [id]);
+
+	// Adding loadStudent as a dependency in useEffect
+	useEffect(() => {
+		loadStudent();
+	}, [loadStudent]);
 
 	const handleInputChange = (e) => {
 		setStudent({

@@ -19,44 +19,44 @@ import org.springframework.web.bind.annotation.RestController;
 import student.studentApp.entity.Student;
 import student.studentApp.service.StudentService;
 
-@CrossOrigin("http://frontend:3000")
+@CrossOrigin(origins = "http://localhost:3000")  // Allow requests from your frontend
 @RestController
 @RequestMapping("/students")
 public class StudentController {
+
     @Value("${cors.allowed.origins}")
     private String allowedOrigins;
 
     @Autowired
-    private StudentService s;
+    private StudentService studentService;
 
-    @CrossOrigin(origins = "${cors.allowed.origins}")
     @GetMapping
     public ResponseEntity<List<Student>> getStudents() {
-        return new ResponseEntity<>(s.getStudents(), HttpStatus.FOUND);
+        List<Student> students = studentService.getStudents();
+        return new ResponseEntity<>(students, students.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "${cors.allowed.origins}")
     @PostMapping
-    public Student addStudent(@RequestBody Student student) {
-        return s.addStudent(student);
+    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
+        Student savedStudent = studentService.addStudent(student);
+        return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);
     }
 
-    @CrossOrigin(origins = "${cors.allowed.origins}")
     @PutMapping("/update/{id}")
-    public Student updateStudent(@RequestBody Student student, @PathVariable Long id) {
-        return s.updateStudent(student, id);
+    public ResponseEntity<Student> updateStudent(@RequestBody Student student, @PathVariable Long id) {
+        Student updatedStudent = studentService.updateStudent(student, id);
+        return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "${cors.allowed.origins}")
     @DeleteMapping("/delete/{id}")
-    public void deleteStudent(@PathVariable Long id) {
-        s.deleteStudent(id);
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+        studentService.deleteStudent(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @CrossOrigin(origins = "${cors.allowed.origins}")
     @GetMapping("/student/{id}")
-    public Student getStudentById(@PathVariable Long id) {
-        return s.getStudentById(id);
+    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+        Student student = studentService.getStudentById(id);
+        return new ResponseEntity<>(student, HttpStatus.OK);
     }
-
 }

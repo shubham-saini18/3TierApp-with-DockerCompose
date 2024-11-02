@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -11,18 +11,20 @@ const StudentProfile = () => {
 		gender: "",
 	});
 
-	useEffect(() => {
-		loadStudent();
-	}, []);
-
-	const loadStudent = async () => {
+	// Wrapping loadStudent in useCallback to stabilize it as a dependency
+	const loadStudent = useCallback(async () => {
 		try {
 			const result = await axios.get(`http://localhost:8081/students/student/${id}`);
 			setStudent(result.data);
 		} catch (error) {
 			console.error("Error fetching student data:", error);
 		}
-	};
+	}, [id]);
+
+	// Adding loadStudent as a dependency in useEffect
+	useEffect(() => {
+		loadStudent();
+	}, [loadStudent]);
 
 	return (
 		<section className="shadow" style={{ backgroundColor: "whitesmoke" }}>
