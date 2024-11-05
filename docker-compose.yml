@@ -2,51 +2,45 @@ version: '3.8'
 
 services:
   database:
-    image: mysql:8.0
+    image: mysql
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: Test@123
-      MYSQL_DATABASE: MyDB
+      MYSQL_ROOT_PASSWORD: "Test@123"
+      MYSQL_DATABASE: "StudentDB"
     volumes:
       - db_data:/var/lib/mysql
     ports:
       - "3306:3306"
     networks:
-      - 3TierApp-Network  # Use the existing network
-
+      - 3TierApp-Network
   backend:
     build:
-      context: ./student-backendSpringboot/student
+      context: ./student-backendSpringboot/student/
       dockerfile: Dockerfile
     container_name: student-backend
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/MyDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: Test@123
-      CORS_ALLOWED_ORIGINS: http://student-frontend:3000
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/StudentDB?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "Test@123"
+      CORS_ALLOWED_ORIGINS: "http://student-frontend:3000"
     ports:
       - "8081:8081"
     depends_on:
       - database
     networks:
-      - 3TierApp-Network  # Use the existing network
-
+      - 3TierApp-Network
   frontend:
     build:
-      context: ./student-frontendReact/student
-      dockerfile: Dockerfile
+      context: ./student-frontendReact/student/
     container_name: student-frontend
     environment:
-      REACT_APP_BACKEND_URL: http://student-backend:8081
+      REACT_APP_BACKEND_URL: "http://student-backend:8081"
     ports:
       - "3000:3000"
     networks:
-      - 3TierApp-Network  # Use the existing network
-
+      - 3TierApp-Network
 volumes:
   db_data:
 
 networks:
   3TierApp-Network:
-    external: true  # Indicate that this network already exists
-

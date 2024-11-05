@@ -1,0 +1,37 @@
+.container {
+    background-color: #f8f9fa; /* Light background color */
+}
+
+.card {
+    background-color: #ffffff; /* White card background */
+    border-radius: 10px ; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+.card h2 {
+    color: #007bff; /* Primary color for headings */
+}
+
+.card label {
+    color: #6c757d; /* Secondary color for labels */
+}
+
+.card .btn-success {
+    background-color: #28a745; /* Green for success buttons */
+    border-color: #28a745;
+}
+
+.card .btn-success:hover {
+    background-color: #218838; /* Darker green on hover */
+    border-color: #218838;
+}
+
+.card .btn-danger {
+    background-color: #dc3545; /* Red for danger buttons */
+    border-color: #dc3545;
+}
+
+.card .btn-danger:hover {
+    background-color: #c82333; /* Darker red on hover */
+    border-color: #c82333;
+}
